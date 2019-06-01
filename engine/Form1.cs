@@ -61,12 +61,12 @@ namespace proj2
                 stop_watch = DateTime.Now;
             }
 
-            Bitmap bmap = Graphics.blankBitmap(200, 50);
+            Bitmap bmap = Graphic.blankBitmap(200, 50);
 
-            double angle = Math.PI / 90;
+            float angle = (float)Math.PI / 90;
             for (int i = 0; i < vs.Length; i++)
             {
-                vs[i].RotateX(axis_mundi, angle * .9);
+                vs[i].RotateX(axis_mundi, angle * (float)0.9);
                 vs[i].RotateZ(axis_mundi, angle);
             }
             //light.x = Math.Cos(-tick * Math.PI / 200) * 500 + 100;
@@ -81,18 +81,18 @@ namespace proj2
             Utils.CalculateVerticesNormals(vs);
             foreach (var v in vs)
             {
-                Graphics.calculateShading(v, light);
+                Graphic.calculateShading(v, light);
             }
             foreach (var t in ts)
             {
-                Triangle tp = Graphics.projectTriangle(t, 20000);
+                Triangle tp = Graphic.projectTriangle(t, 20000);
                 //Graphics.printTriangle(tp, bmap);
                 //double[] clrs = new double[3];
                 //clrs[0] = 0;
                 //clrs[1] = 250;
                 //clrs[2] = 100;
                 //Graphics.printTriangle(tp, bmap, clrs);
-                Graphics.printTriangle(tp, bmap);
+                Graphic.printTriangle(tp, bmap);
             }
 
             //triangle.RotateX(new Vector3d(100, 100, 100), Math.PI/18);

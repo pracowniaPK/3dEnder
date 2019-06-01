@@ -26,7 +26,7 @@ namespace proj2
             normal = Vector3d.GetNormal(dv1, dv2);
         }
 
-        public void RotateZ(Vector3d axisZ, double angle)
+        public void RotateZ(Vector3d axisZ, float angle)
         {
             foreach (Vector3d v in vs)
             {
@@ -34,7 +34,7 @@ namespace proj2
             }
         }
 
-        public void RotateX(Vector3d axisX, double angle)
+        public void RotateX(Vector3d axisX, float angle)
         {
             foreach (Vector3d v in vs)
             {
@@ -54,7 +54,7 @@ namespace proj2
 
         public static Triangle[] SortTriangles(Triangle[] ts)
         {
-            double[] zs = new double[ts.Length];
+            float[] zs = new float[ts.Length];
             for (int i = 0; i < ts.Length; i++)
             {
                 zs[i] = Math.Min(ts[i].vs[0].z, ts[i].vs[1].z);

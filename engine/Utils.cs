@@ -11,12 +11,12 @@ namespace proj2
         public static Triangle[] GetCircus(int sides)
         {
             Vector3d[] dRing = new Vector3d[sides];
-            double z = 90;
-            double r = 70;
-            double offset = 100;
+            float z = 90;
+            float r = 70;
+            float offset = 100;
             for (int i = 0; i < sides; i++)
             {
-                dRing[i] = new Vector3d(r*Math.Cos(i*2*Math.PI/sides) + offset, r * Math.Sin(i * 2 * Math.PI / sides) + offset, z);
+                dRing[i] = new Vector3d(r* (float)Math.Cos(i*2*Math.PI/sides) + offset, r * (float)Math.Sin(i * 2 * (float)Math.PI / sides) + offset, z);
             }
 
             Vector3d[] uRing = new Vector3d[sides];
@@ -24,7 +24,7 @@ namespace proj2
             r = 40;
             for (int i = 0; i < sides; i++)
             {
-                uRing[i] = new Vector3d(r * Math.Cos(2 * Math.PI * (0.5 + i) / sides) + offset, r * Math.Sin(2 * Math.PI * (0.5 + i) / sides) + offset, z);
+                uRing[i] = new Vector3d(r * (float)Math.Cos(2 * (float)Math.PI * (0.5 + i) / sides) + offset, r * (float)Math.Sin(2 * (float)Math.PI * (0.5 + i) / sides) + offset, z);
             }
 
             Vector3d tip = new Vector3d(offset, offset, 0);

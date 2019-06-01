@@ -8,15 +8,15 @@ namespace proj2
 {
     class Vector3d
     {
-        public double x;
-        public double y;
-        public double z;
-        public double clr;
+        public float x;
+        public float y;
+        public float z;
+        public float clr;
         public List<Triangle> neighbors;
         public Vector3d vertex_normal;
 
 
-        public Vector3d(double x, double y, double z, double clr=0)
+        public Vector3d(float x, float y, float z, float clr=0)
         {
             this.x = x;
             this.y = y;
@@ -30,47 +30,47 @@ namespace proj2
             return new Vector3d(this.x, this.y, this.z);
         }
 
-        public void RotateX(Vector3d axisX, double angle)
+        public void RotateX(Vector3d axisX, float angle)
         {
-            double ny = y - axisX.y;
-            double nz = z - axisX.z;
-            double nny = ny * Math.Cos(angle) - nz * Math.Sin(angle);
-            nz = ny * Math.Sin(angle) + nz * Math.Cos(angle);
+            float ny = y - axisX.y;
+            float nz = z - axisX.z;
+            float nny = ny * (float)Math.Cos(angle) - nz * (float)Math.Sin(angle);
+            nz = ny * (float)Math.Sin(angle) + nz * (float)Math.Cos(angle);
             nny += axisX.y;
             nz += axisX.z;
             y = nny;
             z = nz;
         }
 
-        public void RotateZ(Vector3d axisZ, double angle)
+        public void RotateZ(Vector3d axisZ, float angle)
         {
-            double nx = x - axisZ.x;
-            double ny = y - axisZ.y;
-            double nnx = nx * Math.Cos(angle) - ny * Math.Sin(angle);
-            ny = nx * Math.Sin(angle) + ny * Math.Cos(angle);
+            float nx = x - axisZ.x;
+            float ny = y - axisZ.y;
+            float nnx = nx * (float)Math.Cos(angle) - ny * (float)Math.Sin(angle);
+            ny = nx * (float)Math.Sin(angle) + ny * (float)Math.Cos(angle);
             nnx += axisZ.x;
             ny += axisZ.y;
             x = nnx;
             y = ny;
         }
 
-        public static double DotProduct(Vector3d v1, Vector3d v2)
+        public static float DotProduct(Vector3d v1, Vector3d v2)
         {
             return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
         }
 
         public static Vector3d GetNormal(Vector3d v1, Vector3d v2)
         {
-            double x = v1.y * v2.z - v1.z * v2.y;
-            double y = v1.z * v2.x - v1.x * v2.z;
-            double z = v1.x * v2.y - v1.y * v2.x;
-            double l = Math.Sqrt(x * x + y * y + z * z);
+            float x = v1.y * v2.z - v1.z * v2.y;
+            float y = v1.z * v2.x - v1.x * v2.z;
+            float z = v1.x * v2.y - v1.y * v2.x;
+            float l = (float)Math.Sqrt((float)(x * x + y * y + z * z));
             return new Vector3d(x / l, y / l, z / l);
         }
 
         public static Vector3d GetNormal(Vector3d v)
         {
-            double l = Math.Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+            float l = (float)Math.Sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
             return new Vector3d(v.x / l, v.y / l, v.z / l);
         }
 

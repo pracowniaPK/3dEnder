@@ -4,9 +4,9 @@ using System.Drawing;
 
 namespace proj2
 {
-    class Graphics
+    class Graphic
     {
-        public static Vector3d projection(Vector3d v, double d)
+        public static Vector3d projection(Vector3d v, float d)
         {
             Vector3d res = new Vector3d(v.x * d / (v.z + d), v.y * d / (v.z + d), 0);
             res.clr = v.clr;
@@ -19,19 +19,19 @@ namespace proj2
             L = Vector3d.GetNormal(L);
             double l = Vector3d.DotProduct(L, v.vertex_normal);
             //l = Math.Abs(l);
-            v.clr = Math.Max(l * 255, 0);
+            v.clr = (float)Math.Max(l * 255, 0);
         }
 
         /// <summary>
         /// Returns new triangle projected on XY plane
         /// </summary>
-        public static Triangle projectTriangle(Triangle t, double d)
+        public static Triangle projectTriangle(Triangle t, float d)
         {
             Triangle res = new Triangle(projection(t.vs[0], d), projection(t.vs[1], d), projection(t.vs[2], d));
             return res;
         }
 
-        public static void printTriangle(Triangle t, Bitmap bitmap)
+        public static void printTriangle(Triangle t, Bitmap bitmap, bool wireFrame = false)
         {
             double[] ty = new double[3];
             for (int i = 0; i < 3; i++)
@@ -41,60 +41,64 @@ namespace proj2
             Array.Sort(ty, t.vs);
             Vector3d[] vs = t.vs;
 
-            for (int y = (int)vs[0].y; y < (int)vs[2].y; y++)
+            for (float y = vs[0].y; y < vs[2].y; y++)
             {
-                double k;
-                int xstart;
-                int xstop;
-                double i4;
-                double i6;
+                float k;
+                float xstart;
+                float xstop;
+                float i4;
+                float i6;
 
-                k = ((double)y - vs[0].y) / (vs[2].y - vs[0].y);
-                xstop = (int)(k * vs[2].x + (1 - k) * vs[0].x);
-                i6 = k * vs[2].clr + (1 - k) * vs[0].clr;
-                if (y < (int)vs[1].y)
+                k = (y - vs[0].y) / (vs[2].y - vs[0].y);
+                xstart = vs[0].x + k * (vs[2].x - vs[0].x);
+                i6 = (1 - k) * vs[0].clr + k * vs[2].clr;
+
+                if (y < vs[1].y)
                 {
-                    k = ((double)y - vs[0].y) / (vs[1].y - vs[0].y);
-                    xstart = (int)(k * vs[1].x + (1 - k) * vs[0].x);
-                    i4 = k * vs[1].clr + (1 - k) * vs[0].clr;
+                    k = (y - vs[0].y) / (vs[1].y - vs[0].y);
+                    xstop = vs[0].x + k * (vs[1].x - vs[0].x);
+                    i4 = (1 - k) * vs[0].clr + k * vs[1].clr;
                 }
                 else
                 {
-                    k = ((double)y - vs[1].y) / (vs[2].y - vs[1].y);
-                    xstart = (int)(k * vs[2].x + (1 - k) * vs[1].x);
-                    i4 = k * vs[2].clr + (1 - k) * vs[1].clr;
+                    k = (y - vs[1].y) / (vs[2].y - vs[1].y);
+                    xstop = vs[1].x + k * (vs[2].x - vs[1].x);
+                    i4 = (1 - k) * vs[1].clr + k * vs[2].clr;
                 }
                 if (xstart > xstop)
                 {
-                    int tmp = xstop;
+                    float tmp = xstop;
                     xstop = xstart;
                     xstart = tmp;
-                    double tmp2 = i4;
+                    tmp = i4;
                     i4 = i6;
-                    i6 = tmp2;
+                    i6 = tmp;
                 }
-                for (int x = xstart; x < xstop; x++)
+
+                for (float x = xstart; x < xstop + 1; x++)
                 {
-                    double k2 = (double)(x - xstart) / (double)(xstop - xstart);
-                    int tint = (int)(Math.Abs(k2 * i6 + (1 - k2) * i4));
+                    k = (x - xstart) / (xstop - xstart);
+                    int tint = (int)(Math.Abs((1 - k) * i6 + k * i4));
                     tint = Math.Min(tint, 255);
                     tint = Math.Max(tint, 0);
                     Color c = Color.FromArgb(tint, tint, tint);
-                    //Color c = Color.FromArgb(0,0,0);
                     if (x > 0 && x < bitmap.Height && y > 0 && y < bitmap.Width)
                     {
-                        bitmap.SetPixel(x, y, c);
+                        bitmap.SetPixel((int)x, (int)y, c);
                     }
+                }
 
+                if (wireFrame)
+                {
+                    Pen myPen = new Pen(Color.White);
+                    using (Graphics g = Graphics.FromImage(bitmap))
+                    {
+                        g.DrawLine(myPen, (float)vs[0].x, (float)vs[0].y, (float)vs[1].x, (float)vs[1].y);
+                        g.DrawLine(myPen, (float)vs[0].x, (float)vs[0].y, (float)vs[2].x, (float)vs[2].y);
+                        g.DrawLine(myPen, (float)vs[2].x, (float)vs[2].y, (float)vs[1].x, (float)vs[1].y);
+                    }
                 }
             }
-
-            // tmp crap:
-            //for (int i = 0; i < 3; i++)
-            //{
-            //    Color c = Color.FromArgb(255, 255, 255);
-            //    bitmap.SetPixel((int)t.vs[i].x, (int)t.vs[i].y, c);
-            //}
         }
 
         public static void printVector3d(Vector3d v, Bitmap bitmap)
